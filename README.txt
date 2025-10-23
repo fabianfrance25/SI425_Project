@@ -6,6 +6,8 @@
 
 
 3. Group Member Duties:
-    Addison-
-    Fabian-
-    Mike- 
+    Addison- Will do the embeddings of plot summaries and the input and find good comparisons. Also find how to use embeddings of count for era of movies such as classics, new, etc.
+
+    Fabian- Will find a source online that labels sentiment similar to lab in which we used lexicons. Then he will label the input lexicon and each of the movies. Then compare scores so they are similar. This won't just label if they are positive or negative but we will judge based on distance from each other. Additionally, look how to give a positive boost in the model to the movies with higher box office revenue.
+
+    Mike- Will handle most of the initial cleaning of the data. He will get it into normal forms in which we can work in. Finally, he will work on the taking the features we worked with and finding good models that might work for this type of problem. 
