@@ -1,4 +1,6 @@
 import pandas as pd
+import ast
+import io
 # we don't need character meta-data, tvtropes.clusters.txt, or name.clusters.txt
 ps_cols = ['wik_mID','summary']
 plot_summaries = pd.read_csv('MovieSummaries/plot_summaries.txt', sep="\t", names=ps_cols)
@@ -11,16 +13,6 @@ movie_metadata = movie_metadata.drop(['fbase_mID'], axis=1)
 
 # normalize the data
 movie_genres = movie_metadata[['wik_mID','genres']]
-
-# need to split the dicts from the genres column into a separate values
-# need to the same thing for languages 
-
-# different tables: movies -> ids, dates, info
-# genres -> movie id and genres
-# language -> movie id and movie language
-import pandas as pd
-import ast
-import io
 
 # we don't need character meta-data, tvtropes.clusters.txt, or name.clusters.txt
 ps_cols = ['wik_mID','summary']
