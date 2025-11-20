@@ -2,7 +2,12 @@
 import pandas as pd
 import gensim.downloader as api
 import string as s
+import sentiment
 from gensim.models.word2vec import Word2Vec
+import nltk
+nltk.download('vader_lexicon')
+from nltk.sentiment.vader import SentimentIntensityAnalyzer
+
 
 # function to get the cosine distance
 def cosine(vA, vB):
@@ -133,69 +138,129 @@ p_scores = []
 # make a merged dataframe with the movie name to each ID
 plot_summaries = pd.merge(plot_summaries, df[['wik_mID', 'name']], on='wik_mID', how='left')
 
-# Loop until the user types 'quit'.
-query = input('Please type a brief description of the movie you would like to watch: ')
+plot_or_mood = input('Between the two options "description" and "mood" type which one you will use to describe your movie: ')
+response = plot_or_mood.lower().strip()
 
-# make a list for the cleaned plots
-cleansumms = []
-
-# for each summary, clean it and it to a list for training
-for s2 in summaries:
-    cleansumms.append(cleanfilm(s2))
-
-# until the user types quit
-while query != 'quit':
-
-    # make a list of the words for the query
-    querywords = []
-    queryclean = cleanquery(query)
- 
-    # for each word grab its vector
-    for i in range(len(queryclean)):
-
-        # add it to a list
-        querywords.append(embeds[[i]])
-        q_count += 1
-
-    # sum all of the vectors in that list
-    v1 = sum(querywords)
-    v1 = v1 / q_count
-    # for each cleaned summaries
-    for i in range(len(cleansumms)):
-
-        # get the cleaned summary
-        summed = cleansumms[i]
-
-        # make the vector of zeros
-        v2 = numpy.zeros(300)
-        
-        # making a counter to get the average value
-        counter = 0
-
-        # for each word in the summary
-        for words in summed:
-
-            # if it exists, add it to the vector
-            if words in embeds:
-                v2 += embeds[words]
-                counter +=1
-        
-        # get an average value for the vector
-        v2 /= counter
-
-        # add all of the similarity scores to a list
-        p_scores.append(cosine(v1.flatten(),v2.flatten()))
-
-    # make a whole column in the new df for scores to the user's prompt
-    plot_summaries['scores'] = p_scores
-
-    # sort them from highest score to lowest
-    sorted_summs = plot_summaries.sort_values(by='scores', ascending=False)
-
-    # print them out
-    print(sorted_summs['name'].head(10))
-
-    # clear everything
-    querywords.clear()
-    p_scores.clear()
+if response == "description":
+    # Loop until the user types 'quit'.
     query = input('Please type a brief description of the movie you would like to watch: ')
+
+    # make a list for the cleaned plots
+    cleansumms = []
+
+    # for each summary, clean it and it to a list for training
+    for s2 in summaries:
+        cleansumms.append(cleanfilm(s2))
+
+    # until the user types quit
+    while query != 'quit':
+
+        # make a list of the words for the query
+        querywords = []
+        queryclean = cleanquery(query)
+    
+        # for each word grab its vector
+        for i in range(len(queryclean)):
+
+            # add it to a list
+            querywords.append(embeds[[i]])
+            q_count += 1
+
+        # sum all of the vectors in that list
+        v1 = sum(querywords)
+        v1 = v1 / q_count
+        # for each cleaned summaries
+        for i in range(len(cleansumms)):
+
+            # get the cleaned summary
+            summed = cleansumms[i]
+
+            # make the vector of zeros
+            v2 = numpy.zeros(300)
+            
+            # making a counter to get the average value
+            counter = 0
+
+            # for each word in the summary
+            for words in summed:
+
+                # if it exists, add it to the vector
+                if words in embeds:
+                    v2 += embeds[words]
+                    counter +=1
+            
+            # get an average value for the vector
+            v2 /= counter
+
+            # add all of the similarity scores to a list
+            p_scores.append(cosine(v1.flatten(),v2.flatten()))
+
+        # make a whole column in the new df for scores to the user's prompt
+        plot_summaries['scores'] = p_scores
+
+        # sort them from highest score to lowest
+        sorted_summs = plot_summaries.sort_values(by='scores', ascending=False)
+
+        # print them out
+        print(sorted_summs['name'].head(10))
+
+        # clear everything
+        querywords.clear()
+        p_scores.clear()
+        query = input('Please type a brief description of the movie you would like to watch: ')
+
+if response == "mood":
+    moods = input("Please type in some traits that you look for in a movie (happy, sad, intriguing): ")
+
+    # make a list for the cleaned plots
+    cleansumms = []
+
+    # for each summary, clean it and it to a list for training
+    for s2 in summaries:
+        cleansumms.append(cleanfilm(s2))
+
+    # until the user types quit
+    while moods != 'quit':
+
+        # make a list of the words for the query
+        queryclean = cleanquery(moods)
+
+        querywords = " ".join(queryclean)
+
+        # sum all of the vectors in that list
+        v1 = sentiment.get_sentiment(querywords)
+
+        # for each cleaned summaries
+        for i in range(len(cleansumms)):
+
+            # get the cleaned summary
+            summed = cleansumms[i]
+
+            # make the vector of zeros
+            sumwords = []
+
+            # for each word in the summary
+            for words in summed:
+                    sumwords.append(words)
+            
+            # get an average value for the vector
+            text = " ".join(sumwords)
+
+            v2 = sentiment.get_sentiment(text)
+
+            # add all of the similarity scores to a list
+            p_scores.append(cosine(v1,v2))
+
+        # make a whole column in the new df for scores to the user's prompt
+        plot_summaries['scores'] = p_scores
+
+        # sort them from highest score to lowest
+        sorted_summs = plot_summaries.sort_values(by='scores', ascending=False)
+
+        # print them out
+        print(sorted_summs['name'].head(10))
+
+        # clear everything
+        querywords = ""
+        p_scores.clear()
+        moods = input("Please type in some traits that you look for in a movie (happy, sad, intriguing)")
