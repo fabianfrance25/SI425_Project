@@ -264,3 +264,21 @@ if response == "mood":
         querywords = ""
         p_scores.clear()
         moods = input("Please type in some traits that you look for in a movie (happy, sad, intriguing)")
+
+from nltk.sentiment.vader import SentimentIntensityAnalyzer
+from sklearn.preprocessing import MinMaxScaler
+
+scaler = MinMaxScaler()
+df['box_norm'] = scaler.fit_transform(df[['box_office']])
+sid = SentimentIntensityAnalyzer()
+
+def get_sentiment(summary):
+    # takes in movie and returns a number between -1 and 1 representing the sentiment of the text
+    sid = SentimentIntensityAnalyzer()
+    scores = sid.polarity_scores(summary)
+    compound_score = scores['compound']
+    return compound_score
+
+alpha = 0.3  # tweakable
+plot_summaries['sentiment_adjusted'] = (
+    plot_summaries['sentiment'] + alpha * plot_summaries['box_norm'])
