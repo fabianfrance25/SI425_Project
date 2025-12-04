@@ -33,9 +33,9 @@ def sentiment_search(query,mov_sums,score_list):
 
     
     sorted_summs = pd.merge(df,plot_summaries,on="wik_mID",how="inner")
-    sorted_summs.sort_values(by='scores',ascending=False)
+    sorted_summs = sorted_summs.sort_values(by='scores', ascending=False)
     only_name = sorted_summs[['name','summary','scores']]
-    print(only_name)
+    print(only_name.head(10))
 
     # clear everything
     querywords = ""
