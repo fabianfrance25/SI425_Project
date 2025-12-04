@@ -1,0 +1,8 @@
+- improve embeddings source (not wiki or google glove or whatever)
+- impliment the sentiment visualization (just putting the code in the file)
+- look for ways to maybe make it interactive
+- try to incorperate genres into the sentiment analysis as weights
+- work on improving the recommendations (suggested: family, happy, inspiring and it recommended a movie with the description of: 
+"A teenager (Liane Balaban) watches a scary movie, then realizes the deformed killer from the film is stalking her."
+- finish write up
+- finish presentation
