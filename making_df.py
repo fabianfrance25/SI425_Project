@@ -14,6 +14,7 @@ mm_cols = ['wik_mID','fbase_mID','name','release_date','box_office','run_time','
 
 # read the df
 df = pd.read_csv('MovieSummaries/movie.metadata.tsv', sep='\t', names =mm_cols)
+# genres = df['genres'].unique()
 
 # remove the freebase movieID and use fillna(0) to fill the values to be 0
 df = df.drop(['fbase_mID'], axis=1)
@@ -54,5 +55,15 @@ final_df = df_exploded.drop(columns=['countries', 'languages', 'genres'])
 # Reset the index and keep the original index for referenceMovieSummaries/
 final_df = final_df.reset_index()
 final_df = final_df.rename(columns={'index': 'original_index'})
-
 # END of Gemini Code
+
+# NEW DATASET from Kaggle that uses the TMDB API
+# Cleaning it to train the custom model
+TMDB_df = pd.read_csv('TMDB_movie_dataset_v11.csv')
+TMDB_df = TMDB_df.dropna(axis=0)
+oneMsums = TMDB_df['overview'].tolist()
+Msumcleaned = []
+
+# for each summary, clean it and it to a list for training
+for s2 in oneMsums:
+    Msumcleaned.append(cleanfilm(s2))
