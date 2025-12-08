@@ -1,4 +1,3 @@
-# import the necessary functions and libraries
 import sentiment
 import pandas as pd
 from functions import *
@@ -6,11 +5,9 @@ from making_df import *
 pd.set_option('display.max_colwidth', None)
 #pd.reset_option("display.max_rows")
 
-# initialize the master df
 df = df.drop(['release_date','box_office','run_time','languages','countries','genres'], axis=1)
 
 # made by Gemini AI
-# We had an idea to use genres as weights, but ran out of time to implement it
 GENRE_SENTIMENT_MAP = {
     # HIGHLY POSITIVE (+0.6 to +1.0)
     'Romance': 1.0, 
@@ -55,17 +52,9 @@ def get_genre_target_score(movie_genres):
             count += 1
     # Return the average genre score (or 0 if no mapped genres are found)
     return score / count if count > 0 else 0.0
-<<<<<<< HEAD
 
 def mood_search(query, mov_sums):
     score_list = []
-=======
-    # Gemini AI Code end
-    
-def sentiment_search(query,mov_sums,score_list):
-    # make a list of the words for the query
-    queryclean = cleanquery(query)
->>>>>>> 83a35124526a365c9291a2a625b9af67be1536aa
 
     query_clean = cleanquery(query)
     query_text = " ".join(query_clean)
@@ -99,17 +88,10 @@ def sentiment_search(query,mov_sums,score_list):
 
         final_score = (0.4*text_match_score) + (0.6*genre_alignment_score)
         score_list.append(final_score)
-<<<<<<< HEAD
 
     # return as a DataFrame
     mood_df = plot_summaries.copy()
     mood_df['mood_score'] = score_list
     mood_df['wik_mID'] = plot_summaries['wik_mID']
-=======
-    
-    # Gemini AI Code end
-    # make a whole column in the new df for scores to the user's prompt
-    plot_summaries['scores'] = score_list
->>>>>>> 83a35124526a365c9291a2a625b9af67be1536aa
 
     return mood_df

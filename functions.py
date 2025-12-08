@@ -8,7 +8,6 @@ def cosine(vA, vB):
     A = numpy.sqrt(numpy.dot(vA,vA))
     B = numpy.sqrt(numpy.dot(vB,vB))
 
-    # kept getting a runtim error so I coded it this way, the math is fine
     if A * B == 0:
         return 0
     
