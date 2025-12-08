@@ -1,0 +1,21 @@
+In order to run this code, please make sure to do the following:
+1. Download the file from the link in: TMDB_data.txt. This will allow you to train the custom model we made based off of a huge corpus of movie plot summaries from 2008 - 2024 (almost 1 million summaries)
+2. After doing so, move it to the working directory for this particular project
+3. Please make sure you are using the word2vec environment we created in class and install all of the other missing packages if there are any
+4. Run the code by typing 'python3 movsearch.py' and wait. It will take a while for the queries to print out
+5. The genres and moods you can pick from are listed in the terminal
+6. Here is what the general file structure should look like:
+   project directory:
+     Movie_Summaries (folder):
+         - movie.metadata.tsv
+         - plot_summaries.txt
+     - mood.py
+     - movsearch.py
+     - sentiment.py
+     - year_pref.py
+     - functions.py
+     - description.py
+     - making_df.py
+     - instructions.txt
+     - TMDB_movie_dataset_v11.csv
+  These are all of the files you need to successfully run this code.

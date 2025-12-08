@@ -1,1 +1,0 @@
-In order to run code, please makesure to be in the word2vec mamba environment and have all of the approrpriate .csv files downloaded.
