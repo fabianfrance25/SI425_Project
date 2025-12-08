@@ -21,8 +21,6 @@ pd.set_option('display.max_colwidth', None)
 # create a custom model for the embeddings
 # https://www.kaggle.com/datasets/asaniczka/tmdb-movies-dataset-2023-930k-movies?resource=download
 movsearch_model = Word2Vec(sentences=Msumcleaned,
-                           
-                           # keep the vector size at 300 and keep them the same
                            vector_size=300,
                            window=5,
                            min_count=5,
@@ -40,7 +38,7 @@ p_scores = []
 
 # prompt the user on whether or not they want to find a movie based on a description or a mood
 # a description means you type in: robots take over earth and humans must fight
-# a modd for a similar type of movie would mean: dystopian robot human
+# a mood for a similar type of movie would mean: dystopian robot human
 description_or_mood = input('Between the two options "description" and "mood" type which one you will use to describe your movie: ')
 
 # make the response uniform by getting rid of grammar or casing / sanitation
@@ -54,7 +52,6 @@ for s2 in summaries:
     cleansumms.append(cleanfilm(s2))
 
 if response == "description":
-    
     desc_query = input('Please type a brief description of the movie you would like to watch: ')
     while desc_query != 'quit':
         description_search(desc_query,embeds,cleansumms,p_scores)
