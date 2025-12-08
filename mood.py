@@ -53,57 +53,45 @@ def get_genre_target_score(movie_genres):
     # Return the average genre score (or 0 if no mapped genres are found)
     return score / count if count > 0 else 0.0
 
-def sentiment_search(query,mov_sums,score_list):
-    # make a list of the words for the query
-    queryclean = cleanquery(query)
+def mood_search(query, mov_sums):
+    score_list = []
 
-    querywords = " ".join(queryclean)
+    query_clean = cleanquery(query)
+    query_text = " ".join(query_clean)
 
-    # sum all of the vectors in that list
-    v1 = sentiment.get_sentiment(querywords)
+    MOOD_MAP = {
+        'happy': 1.0, 'joy': 0.9, 'funny': 0.8,
+        'sad': -0.8, 'dark': -0.9, 'intense': -0.5,
+        'exciting': 0.7, 'romantic': 1.0, 'scary': -1.0,
+        'action': -0.3,
+    }
 
-    # for each cleaned summaries
-    for i in range(len(mov_sums)):
+    v1 = sum([MOOD_MAP.get(w,0) for w in query_clean])
+    v1 = v1 / len(query_clean) if query_clean else 0.0
 
-        # get the cleaned summary
-        summed = mov_sums[i]
+    for i, summary in enumerate(mov_sums):
+        text = " ".join(summary)
+        v2 = sum([MOOD_MAP.get(w,0) for w in summary])
+        v2 = v2 / len(summary) if summary else 0.0
 
-            
-        # get an average value for the vector
-        text = " ".join(summed)
-
-        v2 = sentiment.get_sentiment(text)
-
-        # Gemini AI Code
+        # text match
         text_match_score = 1.0 - abs(v1 - v2)
 
+        # genre alignment
         try:
-            # Assuming plot_summaries and final_df can be linked via wik_mID
-            movie_id = plot_summaries.loc[i, 'wik_mID']
-            # Get all unique genre names for this movie ID
-            movie_genres = final_df[final_df['wik_mID'] == movie_id]['genres_names'].unique().tolist()
-            
+            movie_id = plot_summaries.loc[i,'wik_mID']
+            movie_genres = final_df[final_df['wik_mID']==movie_id]['genres_names'].unique().tolist()
             target_score = get_genre_target_score(movie_genres)
-            
-            # Critical alignment calculation: small distance = high score
             genre_alignment_score = 1.0 - abs(v1 - target_score)
-        
-        except Exception:
-            # Safely handle missing ID/data
+        except:
             genre_alignment_score = 0.0
 
-        final_score = (0.4 * text_match_score) + (0.6 * genre_alignment_score)
-        
+        final_score = (0.4*text_match_score) + (0.6*genre_alignment_score)
         score_list.append(final_score)
 
-    # make a whole column in the new df for scores to the user's prompt
-    plot_summaries['scores'] = score_list
+    # return as a DataFrame
+    mood_df = plot_summaries.copy()
+    mood_df['mood_score'] = score_list
+    mood_df['wik_mID'] = plot_summaries['wik_mID']
 
-    sorted_summs = pd.merge(df,plot_summaries,on="wik_mID",how="inner")
-    sorted_summs = sorted_summs.sort_values(by='scores', ascending=False)
-    only_name = sorted_summs[['name','summary','scores']]
-    print(only_name.head(10))
-
-    # clear everything
-    querywords = ""
-    score_list.clear()
+    return mood_df
