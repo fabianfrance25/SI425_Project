@@ -31,10 +31,10 @@ cleansumms = [cleanfilm(s) for s in summaries]
 
 # ask the user for input given a desired genre, mood, and a current or older movie
 print(f'Here are the different genres you can pick from: {genrelist}\n')
-desc_query = input("Describe the type of movie you want (genre): ")
+desc_query = input("Describe the type of movie you want (you can use a genre or a description): ")
 
-print(f'Here are the different moods you can pick from: {moodlist}\n')
-tone_query = input("Describe the mood (happy, sad, intense, etc.): ")
+print(f'Here are the different examples of moods you can pick from: {moodlist}\n')
+tone_query = input("Describe the mood: ")
 
 year_query = input("Do you prefer NEW movies or OLD movies? ").lower().strip()
 
