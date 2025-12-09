@@ -2,7 +2,10 @@ import pandas as pd
 from functions import *
 from making_df import *
 pd.set_option('display.max_colwidth', None)
+from nltk.sentiment.vader import SentimentIntensityAnalyzer
 #pd.reset_option("display.max_rows")
+
+sentiment = SentimentIntensityAnalyzer()
 
 df = df.drop(['release_date','box_office','run_time','languages','countries','genres'], axis=1)
 
@@ -77,8 +80,10 @@ def mood_search(query, mov_sums):
 
     # this does the same thing, but for the recommendation data (movie summary)
     for i, summary in enumerate(mov_sums):
-        v2 = sum([MOOD_MAP.get(w,0) for w in summary])
-        v2 = v2 / len(summary) if summary else 0.0
+
+        # using vader to get the sentiment
+        scores  = sentiment.polarity_scores(mov_sums)
+        v2 = scores['compound']
 
         # Gemini AI Code begin
 
