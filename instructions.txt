@@ -11,8 +11,7 @@ In order to run this code, please make sure to do the following:
          - plot_summaries.txt
      - mood.py
      - movsearch.py
-     - sentiment.py
-     - year_pref.py
+     - evaluate.py
      - functions.py
      - description.py
      - making_df.py
