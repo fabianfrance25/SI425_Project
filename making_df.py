@@ -14,6 +14,8 @@ mm_cols = ['wik_mID','fbase_mID','name','release_date','box_office','run_time','
 
 # read the df
 df = pd.read_csv('MovieSummaries/movie.metadata.tsv', sep='\t', names =mm_cols)
+
+# done to see how many genres needed to map as weights
 # genres = df['genres'].unique()
 
 # remove the freebase movieID and use fillna(0) to fill the values to be 0
